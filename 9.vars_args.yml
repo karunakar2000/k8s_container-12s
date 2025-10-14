@@ -1,0 +1,9 @@
+- name: variables from args
+  hosts: local
+  connection: local
+  tasks:
+  - name: print below info
+    ansible.builtin.debug:
+      msg: " Course is: {{ COURSE }}, Duration: {{ DURATION }}, Trainer: {{ TRAINER }}"
+
+# ansible-playbook -i inventory.ini -e ansible_user=ec2-user -e ansible_password=DevOps321 -e "COURSE=Traaform" -e "DURATION=9HRS" -e "TRAINER=KKT" 9.vars_args.yml

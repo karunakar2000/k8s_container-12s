@@ -1,5 +1,5 @@
-- name: setup shipping server
-  hosts: shipping
+- name: setup payment server
+  hosts: payment
   become: yes
   tasks:
   - name: install python packages 
@@ -62,6 +62,6 @@
     ansible.builtin.systemd_service:
       name: payment
       state: restarted 
-      enabled: true
+      enabled: yes
       daemon_reload: true
       

@@ -1,0 +1,63 @@
+- name: setup user server
+  hosts: user
+  become: yes
+  tasks:
+  - name: Disable default NodeJS
+    ansible.builtin.shell: |
+      dnf module disable nodejs -y
+      dnf module enable nodejs:20 -y
+  
+  - name: install nodejs
+    ansible.builtin.package:
+      name: nodejs
+      state: present
+      
+  - name: create roboshop system user
+    ansible.builtin.user:
+      name: roboshop
+      comment: Roboshop System user
+      system: true
+      shell: /sbin/nologin
+      home: /app
+    # safe to remove directory, because 2nd time run script it will download freshly. No error if does not exist.
+  - name: remove app directory
+    ansible.builtin.file:
+      path: /app
+      state: absent
+
+  - name: creat app directory
+    ansible.builtin.file:
+      state: directory
+      path: /app
+
+  - name: delete user zip file
+    ansible.builtin.file:
+      path: /tmp/user.zip
+      state: absent
+
+  - name: download user application
+    ansible.builtin.get_url:
+      url: https://roboshop-artifacts.s3.amazonaws.com/user-v3.zip
+      dest: /tmp/user.zip
+
+  - name: extract user application
+    ansible.builtin.unarchive:
+      src: /tmp/user.zip
+      dest: /app
+      remote_src: yes
+
+  - name: install dependencies
+    community.general.npm:
+      path: /app
+  
+  - name: copy user service
+    ansible.builtin.copy:
+      src: user.service
+      dest: /etc/systemd/system/user.service
+      
+  - name: daemon reload enable and start
+    ansible.builtin.systemd_service:
+        name: user
+        state: started 
+        enabled: true
+        daemon_reload: true

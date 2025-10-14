@@ -8,10 +8,16 @@
     domain_name: "dso86s.xyz"
     subnet_id: subnet-02a9e2ee3cabd4c49
     instances: 
-    # - mongodb
-    # - redis
-    # - mysql
-    # - rabbitmq
+    - mongodb
+    - redis
+    - mysql
+    - rabbitmq
+    - catalogue
+    - user
+    - cart
+    - shipping
+    - payment
+    - frontend
   tasks:
     - name: create ec2 instance
       amazon.aws.ec2_instance:

@@ -19,11 +19,11 @@
       system: true
       shell: /sbin/nologin
       home: /app
-# safe to remove directory, because 2nd time run script it will download freshly. No error if does not exist.
+    # safe to remove directory, because 2nd time run script it will download freshly. No error if does not exist.
   - name: remove app directory
     ansible.builtin.file:
-    path: /app
-    state: absent
+      path: /app
+      state: absent
 
   - name: creat app directory
     ansible.builtin.file:
